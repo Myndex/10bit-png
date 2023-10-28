@@ -49,7 +49,11 @@ alpha channel.
 It should compress well, as the vertically adjecent pixels will both be    
 either U or V type, so though the horizontal adjacent pixels alternate    
 U or V, the prefilter should in theory select the vertically adjacent   
-pixel for the deltas.
+pixel for the deltas. I.e.:
+
+UVUVUVUV    
+UVUVUVUV    
+UVUVUVUV
 
 An alternate scheme is, horizonally UUVVUUVV, and offseting each line by 1 pixel as:
 
