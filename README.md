@@ -3,6 +3,10 @@ A proposal for a compression efficient 10bit variant of png.
 
 This is also [**issue 357 at the png-spec repo**.](https://github.com/w3c/PNG-spec/issues/357) comments should probably be made there in the interim.
 
+### NEW! 
+See also the minifloat version and the YoqUV versions.
+
+----
 While it is possible to use the sBIT chunk to put a 10bit per channel image into a 16bit container.....
 > ....More efficient coding of 10-bit (and 16-bit) words requires a different coding technique, but that is a totally different (and more complex) issue IMHO....
 
