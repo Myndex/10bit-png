@@ -44,17 +44,33 @@ computational efficiency, as is common practice in broadcasting.
 
 Unlike the above version (12 10 10), this version will not be
 particularly visible in legacy viewers, but it does retain a full 8 bit
-alpha channel. Also it may not compress as well due to the altering U
-and V per pixel in a checkerboard pattern. More work is needed to find
-the best configuration to work with the existing png compression scheme.
+alpha channel. 
+
+It should compress well, as the vertically adjecent pixels will both be    
+either U or V type, so though the horizontal adjacent pixels alternate    
+U or V, the prefilter should in theory select the vertically adjacent   
+pixel for the deltas.
+
+An alternate scheme is, horizonally UUVVUUVV, and offseting each line by 1 pixel as:
+
+UUVVUUVV    
+UVVUUVVU    
+VVUUVVUU    
+VUUVVUUV    
+
+Which would give the prefilter more options for which pixel(s) to select for the deltas.
+
+Advantages
+
+A 12 bit PQ image in an 8bpx container.
+Uses standard png compression
+U pixels are aligned vertically, as are V, which should help compression.
 
 **Advantages**
 
 -   A 12 bit PQ image in an 8bpx container.
 -   Uses standard png compression
-    -   however, it should be noted that altering U and V every pixel is
-        likely less efficient compressing than the 12/10/10 versions
-        above.
+-   U and V are distributed to pixels in a vertically aligned way that should compress well.
 -   Y<sub>PQ</sub> is created with the PQ gamma for computational
     simplicity
 -   UV is used, as it is a common, simple transform.
@@ -62,7 +78,6 @@ the best configuration to work with the existing png compression scheme.
 -   The full 8 bit Alpha is maintained.
 
 
-![YpqUV odd U even V](https://github.com/Myndex/10bit-png/assets/42009457/fd8dd43b-f0aa-46e2-a225-71767bf42e51)
-
+![YpqUV odd U even V vertical pixels](https://github.com/w3c/PNG-spec/assets/42009457/469fc256-dc6c-42db-9640-76fb0de3b5af)
 
 ©2023 Andrew Somers
