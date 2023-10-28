@@ -49,3 +49,14 @@ Thank you for reading.
 _Andrew Somers_    
 _Director of Research_    
 _Inclusive Reading Technologies, Inc._    
+
+
+
+### Recent update
+
+![10bit png bit map from my wiki](https://github.com/Myndex/10bit-png/assets/42009457/516f8ffa-dc5a-4bf3-9bd2-1fe1b75deef1)
+
+
+©2023 Andrew Somers
+
+
