@@ -51,37 +51,34 @@ either U or V type, so though the horizontal adjacent pixels alternate
 U or V, the prefilter should in theory select the vertically adjacent   
 pixel for the deltas. I.e.:
 
-UVUVUVUV    
-UVUVUVUV    
-UVUVUVUV
+UVUVUV
+UVUVUV
 
-An alternate scheme is, horizonally UUVVUUVV, and offseting each line by 1 pixel as:
+An alternate scheme is, horizonally UUVVUUVV, and offsetting each line by 1 pixel as:
 
-UUVVUUVV    
-UVVUUVVU    
-VVUUVVUU    
-VUUVVUUV    
+The stagger should progress right:
 
-Which would give the prefilter more options for which pixel(s) to select for the deltas.
+UUVVUUVV
+VUUVVUUV
+VVUUVVUU
+UVVUUVVU
 
-Advantages
+This way a U (or V) will always have a U (or V) either above or to the left, and 
+should give the prefilter more options for which pixel to select for the deltas.
 
-A 12 bit PQ image in an 8bpx container.
-Uses standard png compression
-U pixels are aligned vertically, as are V, which should help compression.
 
-**Advantages**
+### Advantages
 
 -   A 12 bit PQ image in an 8bpx container.
 -   Uses standard png compression
 -   U and V are distributed to pixels in a vertically aligned way that should compress well.
--   Y<sub>PQ</sub> is created with the PQ gamma for computational
-    simplicity
+    - Alternately, UU and VV pairs alternate, with a march right per line  
+-   Y<sub>PQ</sub> is created with the PQ gamma for computational simplicity
 -   UV is used, as it is a common, simple transform.
--   U and V are at 12 bits, and trade out each pixel.
+-   U and V are each 12 bits signed (or offset?) and alternate each pixel, or a marching-offset pair.
 -   The full 8 bit Alpha is maintained.
 
 
-![YpqUV odd U even V vertical pixels](https://github.com/w3c/PNG-spec/assets/42009457/469fc256-dc6c-42db-9640-76fb0de3b5af)
+![YpqUV 422  png file pixel structure oct28-2023](https://github.com/Myndex/10bit-png/assets/42009457/9dabac85-9905-4095-90fc-1528b1e27fd9)
 
 ©2023 Andrew Somers
