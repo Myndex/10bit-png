@@ -39,28 +39,27 @@ compacting the full PQ signal into an 8bpc png container, and maintiaing
 higher color depth than the previous method, trading off for spatial
 resolution instead.
 
-Coefficients are applied to the gamma encoded RGB tuples for
+Coefficients are applied to the gamma encoded RGB tuples for    
 computational efficiency, as is common practice in broadcasting.
 
-Unlike the above version (12 10 10), this version will not be
-particularly visible in legacy viewers, but it does retain a full 8 bit
-alpha channel. 
+Unlike the above version (12 10 10), this version will not be particularly    
+visible in legacy viewers, but it does retain a full 8 bit alpha channel. 
 
 It should compress well, as the vertically adjecent pixels will both be    
 either U or V type, so though the horizontal adjacent pixels alternate    
 U or V, the prefilter should in theory select the vertically adjacent   
 pixel for the deltas. I.e.:
 
-UVUVUV
+UVUVUV    
 UVUVUV
 
 An alternate scheme is, horizonally UUVVUUVV, and offsetting each line by 1 pixel as:
 
 The stagger should progress right:
 
-UUVVUUVV
-VUUVVUUV
-VVUUVVUU
+UUVVUUVV    
+VUUVVUUV    
+VVUUVVUU    
 UVVUUVVU
 
 This way a U (or V) will always have a U (or V) either above or to the left, and 
@@ -69,7 +68,7 @@ should give the prefilter more options for which pixel to select for the deltas.
 
 ### Advantages
 
--   A 12 bit PQ image in an 8bpx container.
+-   A 12 bit PQ image in an 8 bpc container.
 -   Uses standard png compression
 -   U and V are distributed to pixels in a vertically aligned way that should compress well.
     - Alternately, UU and VV pairs alternate, with a march right per line  
