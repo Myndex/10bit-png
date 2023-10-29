@@ -56,6 +56,22 @@ Set in the `mFLT` chunk, along with an optional scale.
         the mFLT chunk
     -   The one bit used as alpha might be better used to dynamically
         select/enable a scale factor.
+### Considerations
+1) There perhaps should be separate biases in the `mFLT` chunk, one for signed and one for unsigned, though this assumes an image may have a combination of signed and unsigned minifloat pixels, which may or may not be advisable.
+
+2) It also could be useful (or might be necessary) to have a spearate base for signed and unsigned.
+
+3) For the purpose, it may be useful to support moving a bit from exponent to the mantissa, so the mantissa is 7+1 implied. Identified in the `mFLT` chunk.
+
+4) The one alpha bit perhaps should be referred to as a utility bit, and can be assigned in the `mFLT` chunk to act as one of:
+    a) Alpha
+    b) Per Pixel Scale
+    c) Per Pixel Bias
+    d) Per Pixel Base
+    e) Per Pixel bit structure (6 bit or 7 bit mantissa)
+
+5) Which bits go to the alpha, there are arguments for MSb exponent, LSb exponent, or LSb mantissa.
+
 
 ### Summary
 
