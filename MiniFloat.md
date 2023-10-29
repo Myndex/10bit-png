@@ -19,7 +19,7 @@ be either positive or negative in the range ±1.984375
 The top MSb of the exponent is *either* a 4th exponent bit for positive
 floats, ***or*** is the sign bit.
 
--   Apply a bitwise OR between the flag and the MSb (flag\|MSb) which
+-   Apply a bitwise OR between the flag and the MSb (flag\|MSb) and this
     will *always* show sign for the number, 1==(+) 0==(-), regardless of
     mode.
 
@@ -28,8 +28,8 @@ position on each RGB channel.
 
 Significand (Mantissa) is 7 bits (6 bits explicit, 1 implied).
 
-### Bias and base can be arbitrary
-Set in the mFLT chunk.
+### Bias and Base can be arbitrary
+Set in the `mFLT` chunk, along with an optional scale.
 
 -   Default bias of 8 and base 2, provides a range of -1.98 to +508.0
 -   Signed mode range is ± 1.984375
@@ -80,7 +80,7 @@ Set in the mFLT chunk.
             negatives to 0 if a high value is present or vice versa,
             with minimal issues.
 
+![MiniFloat png file pixel structure oct28-2023](https://github.com/Myndex/10bit-png/assets/42009457/c5f01d7b-3944-4a4e-8e1c-6c702e1e9380)
 
-![minifloat in a png bit map](https://github.com/Myndex/10bit-png/assets/42009457/2dcec445-d0a2-4cbd-bf0a-1c0604408d8c)
 
 ©2023 Andrew Somers
