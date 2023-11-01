@@ -23,7 +23,9 @@ B, for a semi-viewable image at the file system level.
 
 
 
-![YpqUV 655](https://github.com/Myndex/10bit-png/assets/42009457/389e3d0c-13f9-45e6-843e-98c3ace86a50)
+![YpgUV  png file pixel structure oct29-2023](https://github.com/Myndex/10bit-png/assets/42009457/4bc18ee5-cd1e-4e08-8313-4d773eee246e)
+
+
 
 
 ------------------------------------------------------------------------
@@ -62,8 +64,7 @@ VUUVVUUV
 VVUUVVUU    
 UVVUUVVU
 
-This way a U (or V) will always have a U (or V) either above or to the left, and 
-should give the prefilter more options for which pixel to select for the deltas.
+This way a U (or V) will always have a U (or V) either above or to the left.
 
 
 ### Advantages
@@ -71,13 +72,24 @@ should give the prefilter more options for which pixel to select for the deltas.
 -   A 12 bit PQ image in an 8 bpc container.
 -   Uses standard png compression
 -   U and V are distributed to pixels in a vertically aligned way that should compress well.
-    - Alternately, UU and VV pairs alternate, with a march right per line  
+    - Alternately, UU and VV pairs alternate, with a march right per line.  
 -   Y<sub>PQ</sub> is created with the PQ gamma for computational simplicity
 -   UV is used, as it is a common, simple transform.
+    - Of course other color encodings could be used.
 -   U and V are each 12 bits signed (or offset?) and alternate each pixel, or a marching-offset pair.
--   The full 8 bit Alpha is maintained.
+-   The full 8 bit Alpha is maintained for the alpha version.
 
 
-![YpqUV 422  png file pixel structure oct28-2023](https://github.com/Myndex/10bit-png/assets/42009457/9dabac85-9905-4095-90fc-1528b1e27fd9)
+### Unknown Issues
+- Not sure if this scheme will compress usefully, it seems it should but tests are needed.
+- No legacy safe fallback view such as proposed for the 10bit RGB of this repo.
+
+![YpqUV 422  png file pixel structure oct29-2023](https://github.com/Myndex/10bit-png/assets/42009457/bdfd8cf4-4392-4e41-9ef8-ff9250bb8bee)
+
+Sampling U and V at half the spatial is a common strategy, as the Y holds all the important spatial detail. THis is in accordance with the human vision system's handling of hue/chroma at a third or less the resolution of luminance.
+
+Rather than UV, other color difference modes could of course be used... But thinking efficiency, simplest transforms, avoid any unnecesarry math for converting from YUV to RGB..
+
+The question, is LZ77 decompress fast enough for a streaming use case...
 
 ©2023 Andrew Somers
