@@ -1,102 +1,98 @@
-# Mini Float png
+# Mini Float with Dynamic Bias png
 
+**WORK IN PROGRESS**
+
+_Still working on denormalized values vs normalized ones. I need sleep
+before I can finish that_.
+
+----
+## Wut?
 A mini float format wedged into an 8 bit per channel RGBA png. Each 8
-bit RGB channel has 6 Significand with the 2 LS exponent bits, the
-remaining exponent bits are in what is normally the alpha channel.
+bit RGB channel has 6, 7, or 8 bits mantissa with the remaining bits for
+the LSb of the exponent. Then the two MSb of each exponent are placed in
+what is normally the alpha channel, into the 6 LSbs of that channel.
 
-In the 8 repourposed alpha bits, the MSb is a 1 bit alpha, next is a
-signed/unsigned mode flag, then the 2 MSbs of each RGB channel
-exponent/sign bit.
+In the repurposed alpha, the two MSbs are a 2 bit bias selector, then
+the 2 MSbs of each RGB channel exponent/sign bit.
 
-Asymetrical bias with a per-pixel control of signed/unsigned mode,
-default bias weighted to favor positive numbers.
+Asymmetrical image-global bias, with per-pixel control of one of four
+bias values. Default bias values depend on the number of exponent bits.
 
-4 bit exponent in unsigned mode, and 3 bit exponent in signed mode. The
-mode flag in the alpha sets signed/unsigned for the pixel, applying to
-all three RGB channels. In signed mode, each individual RGB channel can
-be either positive or negative in the range ±1.984375
+2, 3, or 4 bit exponent per channel, then 2 bit bias select to select
+one of 4 preset image-wide bias values (see chart)
 
-The top MSb of the exponent is *either* a 4th exponent bit for positive
-floats, ***or*** is the sign bit.
+A sign bit can be used with a 2 or 3 bit exponent. Otherwise, the values
+are unsigned. This table shows the number of mantissa bits per
+exponent/sign configuration.
 
--   Apply a bitwise OR between the flag and the MSb (flag\|MSb) and this
-    will *always* show sign for the number, 1==(+) 0==(-), regardless of
-    mode.
+![MiniFloat bias chart interim oct29-2023 v2](https://github.com/Myndex/10bit-png/assets/42009457/fced2f22-74fb-463d-a03d-6fd052ddc647)
 
-Bit segmenting is the two MSb of the exponent, the full mantissa is in
-position on each RGB channel.
+Bias is always subtracted so a negative bias value would move the
+exponent farther positive. Bias values overlap in an amount relative
+to the size of the exponent.
 
-Significand (Mantissa) is 7 bits (6 bits explicit, 1 implied).
+Note: normalized versus denormalized numbers needs to be worked out.
 
-### Bias and Base can be arbitrary
-Set in the `mFLT` chunk, along with an optional scale.
+-   In signed mode, each individual RGB channel can be either positive
+    or negative.
 
--   Default bias of 8 and base 2, provides a range of -1.98 to +508.0
--   Signed mode range is ± 1.984375
--   Unsigned mode is 0 to 508.0
--   In signed mode, the top MSb is the sign bit.
--   In unsigned mode, the top MSb it given to the exponent & indicates
-    the exponent's sign.
--   Signed or unsigned mode is per pixel, and can be dynamically
-    switched.
-    -   caveat: values *less than zero* **can not be in the same pixel**
-        *with values greater than 1.98*
-    -   This only applies to dynamic signed/unsigned mode.
-    -   Encoder can resolve edgecase conflicts by clamping negative to 0
-        or overs to 1.98
-    -   The mFLT chunk should have an image-wide lock for the
-        sign/unsign flag.
+<!-- -->
 
-### An arbitrary base can be used
+-   The sign bit, if it exists, is always adjacent to the MSb of the
+    mantissa.
 
--   The base can be 10 for instance
--   For more granularity, the base "could" be something like square root
-    of 2 (1.414...)
-    -   Though it might be more efficient to introduce a scale factor in
-        the mFLT chunk
-    -   The one bit used as alpha might be better used to dynamically
-        select/enable a scale factor.
-### Considerations
-1) There perhaps should be separate biases in the `mFLT` chunk, one for signed and one for unsigned, though this assumes an image may have a combination of signed and unsigned minifloat pixels, which may or may not be advisable.
+The full mantissa occupies each RGB channel. For mantissas of 7 or 6
+bits, the 7th or 8th bit is either LSb of the exponent and/or a sign bit.
 
-2) It also could be useful (or might be necessary) to have a spearate base for signed and unsigned.
+Significand (Mantissa) is 6,7, or 8 bits plus 1 implied.
 
-3) For the purpose, it may be useful to support moving a bit from exponent to the mantissa, so the mantissa is 7+1 implied. Identified in the `mFLT` chunk.
+**Base, scale, and the four bias can be set in the MFLT chunk.**
 
-4) The one alpha bit perhaps should be referred to as a utility bit, and can be assigned in the `mFLT` chunk to act as one of:
-    a) Alpha
-    b) Per Pixel Scale
-    c) Per Pixel Bias
-    d) Per Pixel Base
-    e) Per Pixel bit structure (6 bit or 7 bit mantissa)
+-   Default Base 2, scale 1.0,
+-   Bias matrix is based on mantissa bit depth
+-   In signed mode, the sign bit is adjacent the top MSb of the
+    mantissa.
 
-5) Which bits go to the alpha, there are arguments for MSb exponent, LSb exponent, or LSb mantissa.
+<!-- -->
 
+-   **Caveat:** values if a given pixel is lower than can be realized by the
+    current bias, the higher channel has priority, and the lower channel
+    will be one of (in order of precedence)
+    -   Clipped to a predetermined black level (set in MFLT chunk).
+    -   Clipped to the bottom of the bias range
+    -   Clipped to 0
+    -   Encoder can selectively give priority to lower colors and
+        resolve edge-case conflicts by clamping the overs to a preset
+        value.
+    -   The MFLT chunk should have an image-wide flag for
+        signed/unsigned.
+    -   An image-wide scale factor is in the MFLT chunk, and can be used
+        to compress the distance between values for better tracking.
 
-### Summary
+### *Summary*
 
--   Effective precision of an 11 bit float (4bit exponent, 7bit
-    mantissa)
--   Maps to an 8 bit per channel png (RGBA) container
+-   Effective precision of an 11 bit float (2,3,4 bit exponent with
+    9,8,7 bit mantissa)
+-   Maps to an 8 bit per channel png (RGBA) container.
 -   Expected to compress well using the standard png compression
     schemes.
 -   Arbitrary base supported (image wide)
 -   Scale factor supported (image wide)
--   Adjustable bias (image wide)
+-   Adjustable set of 4 indexed biased (image wide)
+    -   each bias dynamically selectable (per pixel).
 
 <!-- -->
 
--   Precision is acheived by:
+-   Precision is achieved by:
     -   Asymmetric bias to maximize useful range for images.
-    -   Dynamic per pixel sign/unsign mode assumes that:
-        -   negative RGB data is less common, and
-        -   when present in a pixel, the other pixels are likely to be
-            in the ±1.98 range,
+        -   The three RGB tuples are likely to be in the range of a
+            single indexed bias,
         -   encoder can resolve edge case conflicts by clamping
-            negatives to 0 if a high value is present or vice versa,
-            with minimal issues.
+            negatives to a preset or 0 if a high value is present or
+            vice versa, with minimal issues.
 
-![MiniFloat png file pixel structure oct28-2023](https://github.com/Myndex/10bit-png/assets/42009457/c5f01d7b-3944-4a4e-8e1c-6c702e1e9380)
+
+![MiniFloat png file pixel structure oct29-2023 v2](https://github.com/Myndex/10bit-png/assets/42009457/aab04be9-9f6d-4f41-84df-f514f5876997)
 
 
 ©2023 Andrew Somers
