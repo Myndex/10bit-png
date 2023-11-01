@@ -13,12 +13,12 @@ the LSb of the exponent. Then the two MSb of each exponent are placed in
 what is normally the alpha channel, into the 6 LSbs of that channel.
 
 In the repurposed alpha, the two MSbs are a 2 bit bias selector, then
-the 2 MSbs of each RGB channel exponent/sign bit.
+the 2 MSbs of each RGB channel's exponents.
 
 Asymmetrical image-global bias, with per-pixel control of one of four
 bias values. Default bias values depend on the number of exponent bits.
 
-2, 3, or 4 bit exponent per channel, then 2 bit bias select to select
+2, 3, or 4 bit exponent per channel, then 2 bit _bias select_ to select
 one of 4 preset image-wide bias values (see chart)
 
 A sign bit can be used with a 2 or 3 bit exponent. Otherwise, the values
@@ -33,16 +33,14 @@ to the size of the exponent.
 
 Note: normalized versus denormalized numbers needs to be worked out.
 
--   In signed mode, each individual RGB channel can be either positive
+-   For signed modes (1a or 2a), each individual RGB channel can be either positive
     or negative.
-
-<!-- -->
 
 -   The sign bit, if it exists, is always adjacent to the MSb of the
     mantissa.
 
-The full mantissa occupies each RGB channel. For mantissas of 7 or 6
-bits, the 7th or 8th bit is either LSb of the exponent and/or a sign bit.
+The full mantissa occupies each RGB channel. For mantissas of 6 (or 7)
+bits, the 7th (or 8th) bit is either LSb of the exponent or the sign bit.
 
 Significand (Mantissa) is 6,7, or 8 bits plus 1 implied.
 
@@ -78,9 +76,8 @@ Significand (Mantissa) is 6,7, or 8 bits plus 1 implied.
     schemes.
 -   Arbitrary base supported (image wide)
 -   Scale factor supported (image wide)
--   Adjustable set of 4 indexed biased (image wide)
-    -   each bias dynamically selectable (per pixel).
-
+-   Adjustable set of 4 indexed biases (image wide)
+    -   each pixel can select one of four biases.
 <!-- -->
 
 -   Precision is achieved by:
