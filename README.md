@@ -30,7 +30,11 @@ Setting `sBIT` to `8 8 8 2`, then current decoders/viewers should display the tr
 ### Virtual Signaling 
 As per the graphic below, the IHDR chunk would indicate 8 bit and color type 6, for fallback compatibility. So how to tell the decoder we're a segmented 10bit image? We use a `tEXt` chunk with one string that says `segmented10bit` to signal the format, and this maintains backwards compatibility.
 
-![10 bit png a visual info graphic that shows the data arrangement for a 10 bit PNG, and the chunks that would be involved](https://github.com/w3c/ColorWeb-CG/assets/42009457/e304ad1e-01be-4c26-a17a-820c5ab2ef2f)
+<img alt="10 bit png a visual info graphic that shows the data arrangement for a 10 bit PNG, and the chunks that would be involved" width="180" src="https://github.com/w3c/ColorWeb-CG/assets/42009457/e304ad1e-01be-4c26-a17a-820c5ab2ef2f">
+
+![10 bit png file pixel structure oct29-2023](https://github.com/Myndex/10bit-png/assets/42009457/598ed2dd-b6a6-4e5d-bf0b-034e8ac0b868)
+
+
 
 ## Advantages
 
@@ -53,12 +57,6 @@ Thank you for reading.
 _Andrew Somers_    
 _Director of Research_    
 _Inclusive Reading Technologies, Inc._    
-
-
-
-### Recent update
-
-![10bit png bit map from my wiki](https://github.com/Myndex/10bit-png/assets/42009457/516f8ffa-dc5a-4bf3-9bd2-1fe1b75deef1)
 
 
 ©2023 Andrew Somers
